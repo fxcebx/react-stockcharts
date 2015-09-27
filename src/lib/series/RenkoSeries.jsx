@@ -1,33 +1,27 @@
 "use strict";
 
 import React from "react";
-import BaseCanvasSeries from "./BaseCanvasSeries";
+import wrap from "./wrap";
 
-class RenkoSeries extends BaseCanvasSeries {
-	getCanvasDraw() {
-		return RenkoSeries.drawOnCanvasStatic;
-	}
-	render() {
-		if (this.context.type !== "svg") return null;
+const RenkoSeries = (props) => {
+	var { plotData, xScale, xAccessor, yScale, yAccessor } = props;
 
-		var { plotData, xScale, xAccessor, yScale, yAccessor } = this.context;
+	var candles = RenkoSeries.getRenko(props, plotData, xScale, xAccessor, yScale, yAccessor)
+		.map((each, idx) => (<rect key={idx} className={each.className}
+							fill={each.fill}
+							x={each.x}
+							y={each.y}
+							width={each.width}
+							height={each.height} />));
 
-		var candles = RenkoSeries.getRenko(this.props, plotData, xScale, xAccessor, yScale, yAccessor).map((each, idx) => (<rect key={idx} className={each.className}
-								fill={each.fill}
-								x={each.x}
-								y={each.y}
-								width={each.width}
-								height={each.height} />));
-
-		return (
-			<g>
-				<g className="candle">
-					{candles}
-				</g>
+	return (
+		<g>
+			<g className="candle">
+				{candles}
 			</g>
-		);
-	}
-}
+		</g>
+	);
+};
 
 RenkoSeries.propTypes = {
 	classNames: React.PropTypes.shape({
@@ -45,7 +39,6 @@ RenkoSeries.propTypes = {
 };
 
 RenkoSeries.defaultProps = {
-	namespace: "ReStock.RenkoSeries",
 	classNames: {
 		up: "up",
 		down: "down"
@@ -62,7 +55,9 @@ RenkoSeries.defaultProps = {
 
 RenkoSeries.yAccessor = (d) => ({open: d.open, high: d.high, low: d.low, close: d.close});
 
-RenkoSeries.drawOnCanvasStatic = (props, height, width, compareSeries, indicator, xAccessor, yAccessor, ctx, xScale, yScale, plotData) => {
+RenkoSeries.drawOnCanvas = (props, ctx, xScale, yScale, plotData) => {
+	var { xAccessor, yAccessor } = props;
+
 	RenkoSeries.getRenko(props, plotData, xScale, xAccessor, yScale, yAccessor).forEach(d => {
 		ctx.beginPath();
 		ctx.fillStyle = d.fill;
@@ -102,4 +97,4 @@ RenkoSeries.getRenko = (props, plotData, xScale, xAccessor, yScale, yAccessor) =
 	return candles;
 };
 
-module.exports = RenkoSeries;
+export default wrap(RenkoSeries);

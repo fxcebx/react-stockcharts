@@ -1,6 +1,7 @@
 "use strict";
 
 var React = require("react");
+var ReactDOM = require("react-dom");
 var d3 = require("d3");
 var parseDate = d3.time.format("%Y-%m-%d").parse
 
@@ -36,6 +37,8 @@ var pages = [
 	require("lib/page/KagiPage"),
 	require("lib/page/PointAndFigurePage"),
 	require("lib/page/RenkoPage"),
+	require("lib/page/CreatingCustomIndicatorPage"),
+	require("lib/page/CreatingCustomChartSeriesPage"),
 	require("lib/page/ChangeLogPage"),
 	require("lib/page/ComingSoonPage"),
 ];
@@ -125,7 +128,7 @@ function renderPage(data, dataFull, compareData) {
 		}
 	};
 
-	React.render(<ExamplesPage />, document.getElementById("chart-goes-here"));
+	ReactDOM.render(<ExamplesPage />, document.getElementById("chart-goes-here"));
 }
 
 d3.tsv("data/MSFT.tsv", (err, MSFT) => {
@@ -226,5 +229,5 @@ function renderPartialPage(data, dataFull, compareData) {
 			)
 		}
 	};
-	React.render(<ExamplesPage />, document.getElementById("chart-goes-here"));
+	ReactDOM.render(<ExamplesPage />, document.getElementById("chart-goes-here"));
 }
